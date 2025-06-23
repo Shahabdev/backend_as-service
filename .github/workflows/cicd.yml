@@ -1,0 +1,24 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+   - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+      - name: Setup Node.js  version
+        uses: action/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install Dependencies
+        run: npm install
+      - name: Deploy to Azure service app 
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: BaaS
+          publish-profile: ${{ secrets.BAAS_AZURE }}   
+          package: . 
