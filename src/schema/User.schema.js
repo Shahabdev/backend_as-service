@@ -1,9 +1,9 @@
 
 import Joi from "joi";
 
-module.exports.signupSchema = (payload) => {
+export const signupSchema = (payload) => {
   const schema = Joi.object({
-    fullname: Joi.string().required().messages({
+    fullName: Joi.string().required().messages({
       "string.empty": "Fullname is required",
       "any.required": "Fullname is required",
     }),
@@ -25,7 +25,7 @@ module.exports.signupSchema = (payload) => {
   return validationResult;
 };
 
-module.exports.loginSchema = (payload) => {
+export const loginSchema = (payload) => {
   const schema = Joi.object({
     email: Joi.string().email().required().messages({
       "string.email": "Email must be a valid email address",
@@ -43,9 +43,9 @@ module.exports.loginSchema = (payload) => {
   return validationResult;
 };
 
-module.exports.editSchema = (payload) => {
+export const editSchema = (payload) => {
   const schema = Joi.object({
-    fullname: Joi.string().required().messages({
+    fullName: Joi.string().required().messages({
       "string.empty": "Fullname is required",
       "any.required": "Fullname is required",
     }),
@@ -55,7 +55,7 @@ module.exports.editSchema = (payload) => {
   return validationResult;
 };
 
-module.exports.passwordSchema = (payload) => {
+export const passwordSchema = (payload) => {
   const schema = Joi.object({
     currentPassword: Joi.string().min(8).required(),
     password: Joi.string().min(8).required(),
