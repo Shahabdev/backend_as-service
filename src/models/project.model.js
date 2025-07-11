@@ -3,21 +3,27 @@ import mongoose, { Schema } from "mongoose";
 
 
 const ProjectSchema = Schema({
-    userId : {
-        type : Schema.Types.ObjectId,
-        ref : "User",
-        required : true
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
-    name : {
-        type : String,
-        required : true
+    name: {
+        type: String,
+        required: true
     },
-    collections : [
+
+    collections: [
         {
-            type : Schema.Types.ObjectId,
-            ref : "Collection"
+            id: {
+                type: Schema.Types.ObjectId,
+                ref: "Collection"
+            },
+            collectionName: {
+                type: String
+            }
         }
     ]
-}, { timestamps : true});
+}, { timestamps: true });
 
-export  const Project = mongoose.model("Project",ProjectSchema);
+export const Project = mongoose.model("Project", ProjectSchema);

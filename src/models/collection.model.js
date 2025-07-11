@@ -1,24 +1,10 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
+const DocumentSubSchema = new Schema({}, { _id: true, strict: false });
 
-const CollectionSchema  =  Schema({
-    projectId : {
-        type : Schema.Types.ObjectId,
-        ref : "Project",
-        required :  true
-    },
-    name : {
-        type : String,
-        required :  true
-    },
-    documents :[
-        {
-            fields: {
-                type : Map,
-                of : Schema.Types.Mixed,
-                required :  true
-            }
-        }
-    ]
-},{timestamps : true});
+const CollectionSchema = Schema({
 
-export const Collection =  mongoose.model("Collection",CollectionSchema);
+  documents: [DocumentSubSchema]
+}, { timestamps: true });
+
+export const Collection = mongoose.model("Collection", CollectionSchema);
+
