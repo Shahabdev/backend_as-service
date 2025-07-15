@@ -70,4 +70,74 @@ export const getCollection = asyncHandler(async (req, res) => {
     } catch (error) {
         throw new ApiError(500, error.message);
     }
-})
+});
+/// ------> REPLACE THE DATA OF WHOLE  DOCUMNET OF COLLECTION FUNCTION ----------->
+export const setDocumentInCollection = asyncHandler(async (req, res) => {
+  try {
+    const { collectionId, documentId } = req.params;
+    const newDocData = req.body;
+
+    const collection = await Collection.findById(collectionId);
+    if (!collection) {
+      throw new ApiError(404, "Collection not found");
+    }
+
+    //-------------- Find index of the document to replace --------------------
+    const docIndex = collection.documents.findIndex(doc => String(doc._id) === documentId);
+    if (docIndex === -1) {
+      throw new ApiError(404, "Document not found in collection");
+    }
+
+    // Replace the document
+    collection.documents[docIndex] = { _id: documentId, ...newDocData };
+
+    await collection.save();
+
+    res.status(200).json({
+      status: true,
+      msg: "Document replaced successfully",
+      document: collection.documents[docIndex]
+    });
+
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
+
+/// -------> Update the the field value ---------------->
+export const updateDocumentInCollection = asyncHandler(async (req, res) => {
+  try {
+    const { collectionId, documentId } = req.params;
+    const updateData = req.body;
+
+    const collection = await Collection.findById(collectionId);
+    if (!collection) {
+      throw new ApiError(404, "Collection not found");
+    }
+
+    const docIndex = collection.documents.findIndex(doc => String(doc._id) === documentId);
+    if (docIndex === -1) {
+      throw new ApiError(404, "Document not found in collection");
+    }
+
+
+    const existingDoc = collection.documents[docIndex];
+    const updatedDoc = { ...existingDoc.toObject(), ...updateData };
+
+    collection.documents[docIndex] = updatedDoc;
+
+    await collection.save();
+
+    res.status(200).json({
+      status: true,
+      msg: "Document updated successfully",
+      document: updatedDoc
+    });
+
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+});
+
+
+
