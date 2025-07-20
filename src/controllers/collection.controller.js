@@ -139,5 +139,34 @@ export const updateDocumentInCollection = asyncHandler(async (req, res) => {
   }
 });
 
+/// -----------------> Delete Collection Function ----------------->
+export const deleteCollection = asyncHandler(async(req,res)=>{
+  try {
+    const {collectionId} =  req.params;
+    if(!collectionId){
+      throw new ApiError(400,"Collection id is required");
+    }
+    const collection = await Collection.findById(collectionId);
+    if(!collection){
+      throw  new ApiError(404,"collection not found");
+    }
+    const projectId =  collection.projectId;
 
+    await Collection.findByIdAndDelete(collectionId);
+    if(projectId){
+      await Project.findByIdAndUpdate(projectId,{
+        $pull : {
+          collections : { id : collectionId}
+        }
+      });
+    }
+
+    return res.status(200).json({
+      status: true,
+      msg: "Collection deleted successfully"
+    });
+  } catch (error) {
+     throw new ApiError(500, error.message);
+  }
+})
 
